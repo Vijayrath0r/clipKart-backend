@@ -1,6 +1,7 @@
 import Fastify from "fastify";
-import userRoutes from "./routes/users.js";
 import fastifyCors from "@fastify/cors";
+import userRoutes from "./routes/users.js";
+import vendorRoutes from "./routes/vendors.js";
 
 const fastify = Fastify({
     logger: true
@@ -10,6 +11,7 @@ fastify.register(fastifyCors, {
 });
 
 fastify.register(userRoutes, { prefix: '/user' });
+fastify.register(vendorRoutes, { prefix: '/vendor' });
 
 fastify.get('/', (req, reply) => {
     return {
