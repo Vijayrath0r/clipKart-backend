@@ -1,4 +1,4 @@
-import { createUser } from "../controllers/users.js";
+import { createUser, loginUser } from "../controllers/users.js";
 
 const addUserSchema = {
   schema: {
@@ -12,11 +12,12 @@ const addUserSchema = {
         userState: { type: "string" },
         zipCode: { type: "string" },
       },
-      required: ["firstName", "lastName", "orgName", "userEmail"],
+      required: ["firstName", "lastName", "userEmail"],
     },
     response: {
       200: {
         properties: {
+          status: { type: "number" },
           message: {
             type: "string",
           },
@@ -28,4 +29,30 @@ const addUserSchema = {
   },
   handler: createUser,
 };
-export { addUserSchema };
+
+const loginUserSchema = {
+  schema: {
+    body: {
+      type: "object",
+      properties: {
+        username: { type: "string" },
+        password: { type: "string" },
+      },
+      required: ["username", "password"],
+    },
+    response: {
+      200: {
+        properties: {
+          status: { type: "number" },
+          message: {
+            type: "string",
+          },
+          data: {},
+        },
+        required: ["status", "message", "data"],
+      },
+    },
+  },
+  handler: loginUser,
+};
+export { addUserSchema, loginUserSchema };

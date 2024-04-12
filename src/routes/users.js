@@ -1,5 +1,6 @@
-import { addUserSchema } from "../models/users.js";
+import { addUserSchema, loginUserSchema } from "../models/users.js";
 const userRoutes = (fastify, option, done) => {
+    fastify.post('/login', loginUserSchema)
     fastify.post('/create', addUserSchema)
     done();
 }

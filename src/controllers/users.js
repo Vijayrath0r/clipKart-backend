@@ -26,32 +26,67 @@ const createSchema = async (schemaName) => {
 const createUser = async (req, res) => {
     const postData = req.body;
     try {
+        const email = postData.userEmail.toLowerCase();
+        const isUserWithEmail = await db.any("SELECT id, firstname, lastname, email, password, city, state, code FROM public.users where email = $1;", email);
+        if (isUserWithEmail.length > 0) {
+            return {
+                status: 0,
+                message: "User Exists with Email",
+                postData: {}
+            }
+        }
         await db.none(`
-        INSERT INTO public.users("firstname", "lastname", "orgname", "email", "password", "city", "state", "code")
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        INSERT INTO public.users("firstname", "lastname", "email", "password", "city", "state", "code")
+        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
             [
                 postData.firstName,
                 postData.lastName,
-                postData.orgName,
-                postData.userEmail,
+                email,
                 postData.password,
                 postData.userCity,
                 postData.userState,
                 postData.zipCode
             ]);
-        await createSchema(postData.orgName);
-        db.createOrdersTable(postData.orgName);
         return {
+            status: 1,
             message: "Success",
             postData
         }
     } catch (error) {
         return {
+            status: 0,
             message: "Something went wrong",
             postData: {}
         }
     }
 }
+
+const loginUser = async (req, res) => {
+    const postData = req.body;
+    try {
+        const isUserWithEmail = await db.any("SELECT id, firstname, lastname, email FROM public.users where email = $1;", postData.username.toLowerCase());
+        console.log(isUserWithEmail);
+        if (isUserWithEmail.length > 0) {
+            return {
+                status: 1,
+                message: "Success",
+                data: isUserWithEmail
+            }
+        }
+        return {
+            status: 0,
+            message: "Invalid Username or password",
+            data: {}
+        }
+    } catch (error) {
+        return {
+            status: 0,
+            message: "Something went wrong",
+            data: {}
+        }
+    }
+}
 export {
-    createUser
+    createUser,
+    loginUser
 };
