@@ -65,7 +65,6 @@ const loginUser = async (req, res) => {
     const postData = req.body;
     try {
         const isUserWithEmail = await db.any("SELECT id, firstname, lastname, email FROM public.users where email = $1;", postData.username.toLowerCase());
-        console.log(isUserWithEmail);
         if (isUserWithEmail.length > 0) {
             return {
                 status: 1,

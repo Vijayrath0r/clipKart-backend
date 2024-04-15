@@ -19,13 +19,14 @@ const createSchema = async (schemaName) => {
         } else {
             console.log(`Schema "${schemaName}" already exists.`);
         }
+        await db.createOrdersTable(schemaName);
+        await db.createStockTable(schemaName);
     } catch (error) {
         console.error('Error creating schema:', error.message);
     }
 }
 const createVendor = async (req, res) => {
     const postData = req.body;
-    console.log(postData);
     try {
         const email = postData.userEmail.toLowerCase();
         const isVendorWithEmail = await db.any("SELECT id FROM public.vendors where email = $1;", email);
@@ -36,6 +37,7 @@ const createVendor = async (req, res) => {
                 postData: {}
             }
         }
+        const tenantName = postData.userOrg.toLowerCase().replace(/\s+/g, '_');
         await db.none(`
         INSERT INTO public.vendors("firstname", "lastname", "orgname", "tenant", "email", "password", "city", "state", "code")
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
@@ -43,13 +45,14 @@ const createVendor = async (req, res) => {
                 postData.firstName,
                 postData.lastName,
                 postData.userOrg,
-                postData.userOrg,
+                tenantName,
                 email,
                 postData.password,
                 postData.userCity,
                 postData.userState,
                 postData.zipCode
             ]);
+        await createSchema(tenantName);
         return {
             status: 1,
             message: "Success",
