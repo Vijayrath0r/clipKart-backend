@@ -13,6 +13,21 @@ const getProductsOfVendor = async (req, res) => {
         productList
     }
 }
+
+const getproductPriceAndStock = async (req, res) => {
+    const tenantName = req.body.tenant;
+    const productId = req.body.productId;
+    const productData = await db.one(
+        "SELECT s.id AS stock_id, s.productId, s.stock as personalStock, p.* FROM $1# .stock AS s JOIN public.products AS p ON s.productId = p.id where s.productId = $2 limit 1;",
+        [tenantName, productId]
+    );
+    return {
+        status: 200,
+        message: "Success",
+        productData
+    }
+}
 export {
-    getProductsOfVendor
+    getProductsOfVendor,
+    getproductPriceAndStock
 };
