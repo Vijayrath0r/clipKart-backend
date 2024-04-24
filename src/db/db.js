@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import pgPromise from 'pg-promise';
 const pgp = pgPromise();
-const connection = 'postgres://postgres:postgres@localhost:5432/clipkart';
+const connection = 'postgresql://clipkart_owner:'+'BbxyCpcz49en'+'@ep-billowing-smoke-a10rg1hn.ap-southeast-1.aws.neon.tech/clipkart?sslmode=require';
 const db = pgp(connection);
 const __filename = fileURLToPath(import.meta.url);
 
