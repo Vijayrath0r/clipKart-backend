@@ -1,4 +1,4 @@
-import { getProductsOfVendor, getproductPriceAndStock } from "../controllers/products.js";
+import { getAllProducts, getProductDetails, getProductsOfVendor, getproductPriceAndStock } from "../controllers/products.js";
 
 const productByVendorSchema = {
   schema: {
@@ -55,4 +55,68 @@ const productPriceAndStockSchema = {
   },
   handler: getproductPriceAndStock,
 };
-export { productByVendorSchema, productPriceAndStockSchema };
+const getAllProductsSchema = {
+  schema: {
+    body: {
+      type: "object",
+      properties: {
+        category: {
+          type: "string"
+        },
+        limit: {
+          type: "number"
+        }
+      },
+      required: ["category", "limit"],
+    },
+    response: {
+      200: {
+        properties: {
+          status: { type: "number" },
+          message: {
+            type: "string",
+          },
+          productData: {},
+        },
+        required: ["status", "message", "productData"],
+      },
+      500: {
+        properties: {
+          status: { type: "number" },
+          message: {
+            type: "string",
+          }
+        },
+        required: ["status", "message"],
+      },
+    },
+  },
+  handler: getAllProducts,
+};
+const productDetailSchema = {
+  schema: {
+    body: {
+      type: "object",
+      properties: {
+        productId: {
+          type: "string"
+        }
+      },
+      required: ["productId"],
+    },
+    response: {
+      200: {
+        properties: {
+          status: { type: "number" },
+          message: {
+            type: "string",
+          },
+          productData: {},
+        },
+        required: ["status", "message", "productData"],
+      },
+    },
+  },
+  handler: getProductDetails,
+};
+export { productByVendorSchema, productPriceAndStockSchema, getAllProductsSchema, productDetailSchema };
