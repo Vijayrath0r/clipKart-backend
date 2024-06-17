@@ -3,6 +3,7 @@ import fastifyCors from "@fastify/cors";
 import userRoutes from "./routes/users.js";
 import vendorRoutes from "./routes/vendors.js";
 import productRoutes from "./routes/products.js";
+import adderessRoutes from "./routes/addresses.js";
 
 const fastify = Fastify({
     logger: true
@@ -14,6 +15,7 @@ fastify.register(fastifyCors, {
 fastify.register(userRoutes, { prefix: '/user' });
 fastify.register(vendorRoutes, { prefix: '/vendor' });
 fastify.register(productRoutes, { prefix: '/product' });
+fastify.register(adderessRoutes, { prefix: '/adderess' });
 
 fastify.get('/', (req, reply) => {
     return {
